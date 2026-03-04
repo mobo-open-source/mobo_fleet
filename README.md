@@ -96,7 +96,7 @@ The app may request the following permissions:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/mobo-open-source/mobo_fleet.git
+   git clone  https://github.com/mobo-open-source/mobo_fleet.git
    cd mobo_fleet
    ```
 
