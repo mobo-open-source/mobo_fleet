@@ -39,7 +39,22 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# Android Studio will place build artifacts here
+# Android
+/android/.gradle/
+/android/local.properties
+/android/generated/
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# iOS
+/ios/Pods/
+/ios/.generated/
+/ios/Flutter/Generated.xcconfig
+/ios/Flutter/flutter_export_environment.sh
+/ios/.DS_Store
+
+# Signing
+*.jks
+*.keystore
+/android/key.properties
