@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mobo_projects/core/designs/theme_data.dart';
+import 'package:mobo_projects/core/globalkey/global_keys.dart';
 import 'package:mobo_projects/features/onboarding/get_started_carousal.dart';
 import 'package:mobo_projects/features/activity/activity_page_provider.dart';
 import 'package:mobo_projects/features/add_contracts/add_contracts_log_page.dart';
@@ -24,6 +25,7 @@ import 'package:mobo_projects/features/login/pages/server_setup_screen.dart';
 import 'package:mobo_projects/features/login/providers/login_provider.dart';
 import 'package:mobo_projects/features/profile/providers/profile_provider.dart';
 import 'package:mobo_projects/features/settings/providers/settings_provider.dart';
+import 'package:mobo_projects/shared/services/review_service.dart';
 import 'package:provider/provider.dart';
 import 'features/dashboard/dashboard_provider.dart';
 
@@ -34,7 +36,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
         ChangeNotifierProvider(create: (_) => LoginProvider()),
         ChangeNotifierProvider(create: (_) => FleetPermissionProvider()),
-        ChangeNotifierProvider(create: (_) => BottomNavProvider()),
+        ChangeNotifierProvider(create: (_) => BottomNavigationBarProvider()),
         ChangeNotifierProvider(create: (_) => VehiclesProvider()),
         ChangeNotifierProvider(create: (_) => DashboardProvider()),
         ChangeNotifierProvider(create: (_) => DriversPageProvider()),
@@ -65,21 +67,40 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+
+    /// Track app open for review system after a delay to ensure activity is ready
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.delayed(const Duration(seconds: 2), () {
+        ReviewService().trackAppOpen();
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<ThemeProvider>(
       builder: (context, provider, child) {
         return MaterialApp(
+          navigatorKey: navigatorKey,
+          scaffoldMessengerKey: scaffoldMessengerKey,
           themeMode: provider.themeMode,
           darkTheme: AppTheme.darkTheme,
           theme: AppTheme.lightTheme,
           debugShowCheckedModeBanner: false,
           home: const SplashScreen(),
           routes: {
-            '/driverDetails': (context) => Driverdetails(),
+            '/driverDetails': (context) => DriversDetailsPage(),
             '/addFuelLog': (context) => AddServiceFuelLogPage(),
             '/server_setup': (_) => const ServerSetupScreen(),
             '/home': (_) => const DashboardPage(),

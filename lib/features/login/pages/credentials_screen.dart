@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hugeicons/hugeicons.dart';
-import 'package:mobo_projects/features/two_factor_authentication/enum_login_result.dart';
 import 'package:mobo_projects/features/two_factor_authentication/two_factor_authentication_page.dart';
 import 'package:mobo_projects/core/providers/clear_provider.dart';
 import 'package:provider/provider.dart';
@@ -80,7 +79,7 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
     });
   }
 
-
+  /// Unified submit handler used by both the Sign In button and Enter key on password field
 
   Future<void> _handleSubmit(LoginProvider provider) async {
     FocusScope.of(context).unfocus();
@@ -213,17 +212,29 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
         biometricContext.endAccountOperation('add_account');
         return false;
       }
+      final client = await OdooSessionManager.getClientEnsured();
+      final userCompanies = await OdooSessionManager.getAllowedCompaniesList();
+      final allowed = userCompanies.map((e) => e['id'] as int).toList();
+      final selectedCompany = newSession.companyId;
+      final fixedSession = newSession.copyWith(
+        selectedCompanyId: selectedCompany,
+        allowedCompanyIds: newSession.allowedCompanyIds,
+      );
+      await fixedSession.saveToPrefs();
+      await OdooSessionManager.updateSession(fixedSession);
+      sessionService.updateSession(fixedSession);
 
       /// Store the new account and mark as current
-      await sessionService.storeAccount(
-        newSession,
-        provider.passwordController.text,
-        markAsCurrent: true,
-      );
+      // await sessionService.storeAccount(
+      //   newSession,
+      //   provider.passwordController.text,
+      //   markAsCurrent: true,
+      // );
 
       /// Persist server URL history and server->database mapping for reuse
       try {
         final prefs = await SharedPreferences.getInstance();
+
         /// Save URL history (keep most recent first, max 10)
         List<String> urls = prefs.getStringList('previous_server_urls') ?? [];
         if (!urls.contains(serverUrl)) {
@@ -233,6 +244,7 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
           }
           await prefs.setStringList('previous_server_urls', urls);
         }
+
         /// Save mapping: server -> database
         await prefs.setString('server_db_$serverUrl', database);
       } catch (e) {
@@ -241,6 +253,8 @@ class _CredentialsScreenState extends State<CredentialsScreen> {
 
       /// Switch to the new account
       await sessionService.switchToAccount(newSession);
+
+
 
       /// Navigate to AppEntry so startup checks (including inventory module check)
       /// can run and show MissingInventoryScreen if needed.

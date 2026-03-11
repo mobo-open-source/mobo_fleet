@@ -3,10 +3,10 @@ import 'package:mobo_projects/features/bottom_navigation_bar/bottom_navigation_b
 
 void main() {
   group('Bottom Navigation Bar Unit Tests', () {
-    late BottomNavProvider provider;
+    late BottomNavigationBarProvider provider;
 
     setUp(() {
-      provider = BottomNavProvider();
+      provider = BottomNavigationBarProvider();
     });
 
     test('Initial index - 0', () {

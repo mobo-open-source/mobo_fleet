@@ -31,7 +31,7 @@ void main() {
 
   testWidgets("Title Driver's History", (WidgetTester tester) async {
     final fakeProvider = FakeDriversPageProvider();
-    final page = Driverdetails();
+    final page = DriversDetailsPage();
 
     await tester.pumpWidget(createTestWidget(fakeProvider, page));
     await tester.pumpAndSettle();

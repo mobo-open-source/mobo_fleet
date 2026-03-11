@@ -297,8 +297,6 @@ class _TwoFactorAuthenticationPageState
 
       /// 5️⃣ Save session in background (non-blocking)
     } catch (e, st) {
-      log('TOTP error: $e');
-      log(st.toString());
       setState(() {
         _error = 'Authentication failed. Please try again.';
       });
@@ -311,10 +309,6 @@ class _TwoFactorAuthenticationPageState
 
   Future<void> _finalizeLogin() async {
     try {
-      log("hi authenticated====>");
-      log("hi authenticated====>");
-      log("hi authenticated====>");
-      log("hi authenticated====>");
       final result = await OdooSessionManager.loginAndSaveSession(
         serverUrl: widget.serverUrl,
         database: widget.database,
@@ -322,23 +316,15 @@ class _TwoFactorAuthenticationPageState
         password: widget.password,
       );
 
-      log("=====================Tesstting=====");
-      log(result.toString());
-      log("================testinfg============");
 
       if (!mounted) return;
 
-      log("hi authenticated====>");
-      log("hi authenticated====>");
-      log("hi authenticated====>");
-      log("hi authenticated====>");
+
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (_) => const AppEntry()),
       );
     } catch (e) {
-      log("failed=================================>");
-      log(e.toString());
       setState(() {
         _error = 'Authentication failed. Please try again.';
       });
@@ -382,8 +368,7 @@ class _TwoFactorAuthenticationPageState
   }
 
   Future<void> _saveSessionData() async {
-    log("started __savigns================>");
-    log("started-->");
+
     final currentUrl = await _webController!.getUrl();
 
     final cookies = await CookieManager.instance().getCookies(url: currentUrl!);
@@ -403,11 +388,6 @@ class _TwoFactorAuthenticationPageState
       database: widget.database,
       sessionId: sessionId!,
     );
-
-    log('SESSION INFO => $sessionInfo');
-    log(widget.serverUrl);
-    log(widget.database);
-    log(widget.username);
 
     final prefs = await SharedPreferences.getInstance();
 

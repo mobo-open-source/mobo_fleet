@@ -50,7 +50,6 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool('hasSeenGetStarted', true);
 
-    log(await prefs.getBool("hasSeenGetStarted").toString());
   }
 
   @override

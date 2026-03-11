@@ -168,7 +168,7 @@ class _BottomNavigationBarPageState extends State<BottomNavigationBarPage> {
           await context.read<ProfileProvider>().fetchUserProfile(
             forceRefresh: true,
           );
-          await context.read<BottomNavProvider>().refreshAll(context);
+          await context.read<BottomNavigationBarProvider>().refreshAll(context);
           CustomSnackbar.showSuccess(context, 'Switched to $companyName');
         },
       ),

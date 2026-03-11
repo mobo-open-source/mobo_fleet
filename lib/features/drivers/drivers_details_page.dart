@@ -8,20 +8,20 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
 
-class Driverdetails extends StatefulWidget {
+class DriversDetailsPage extends StatefulWidget {
   final bool showFromDrivers;
   final int? vehicleId;
-  const Driverdetails({
+  const DriversDetailsPage({
     super.key,
     this.showFromDrivers = false,
     this.vehicleId,
   });
 
   @override
-  State<Driverdetails> createState() => _DriverDetailsState();
+  State<DriversDetailsPage> createState() => _DriverDetailsState();
 }
 
-class _DriverDetailsState extends State<Driverdetails> {
+class _DriverDetailsState extends State<DriversDetailsPage> {
   String driverName = "-";
   String driverPhone = "-";
   int driverId = 0;
@@ -558,7 +558,7 @@ Widget _driverDetailsWidget({
 }
 
 Widget _buildVehicleDrivingHistory(
-    DriversPageProvider provider,
+  DriversPageProvider provider,
   BuildContext context,
   bool isDarkTheme,
 ) {
@@ -584,7 +584,9 @@ Widget _buildVehicleDrivingHistory(
               text: "No Driving History found",
               fontSize: 18,
               fontWeight: FontWeight.bold,
-              color: isDarkTheme ? AllDesigns.whiteColor : AllDesigns.blackColor,
+              color: isDarkTheme
+                  ? AllDesigns.whiteColor
+                  : AllDesigns.blackColor,
               letterSpacing: 0,
             ),
           ],

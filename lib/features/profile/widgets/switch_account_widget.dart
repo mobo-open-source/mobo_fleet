@@ -3,7 +3,10 @@ import 'dart:convert';
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:hugeicons/hugeicons.dart';
+import 'package:mobo_projects/core/designs/custom_designs.dart';
 import 'package:mobo_projects/features/bottom_navigation_bar/bottom_navigation_bar_page.dart';
+import 'package:mobo_projects/features/company/providers/company_provider.dart';
+import 'package:mobo_projects/features/profile/providers/profile_provider.dart';
 import 'package:mobo_projects/features/two_factor_authentication/two_factor_authentication_page.dart';
 import 'package:mobo_projects/core/providers/clear_provider.dart';
 import 'package:mobo_projects/app_entry.dart';
@@ -33,16 +36,12 @@ class SwitchAccountWidget extends StatelessWidget {
         final otherAccounts = sessionService.storedAccounts.where((account) {
           final currentSession = sessionService.currentSession;
           if (currentSession == null) return false;
+          if (account['userId'] == currentSession.userId) return false;
 
-          final isSameURLAndDb =
-              account['serverUrl'] == currentSession.serverUrl &&
-              account['database'] == currentSession.database;
+          return !_isCurrentAccount(account, sessionService);
 
-          final isSameUser =
-              account['userId']?.toString() == currentSession.userId.toString();
-
-          /// ✅ Show only same server+db but different user
-          return isSameURLAndDb && !isSameUser;
+          /// ✅ Show all accounts except current one (ANY URL / DB)
+          //  return !isSameUser;
         }).toList();
 
         final accountCount = otherAccounts.length;
@@ -236,46 +235,25 @@ class SwitchAccountWidget extends StatelessWidget {
         ),
         trailing: isCurrent
             ? null
-            : PopupMenuButton<String>(
-                icon: Icon(
-                  Icons.more_vert,
-                  color: isDark ? Colors.grey[400] : Colors.grey[600],
-                  size: 18,
-                ),
-                onSelected: (value) async {
-                  if (value == 'remove') {
-                    await _removeAccount(context, account, sessionService);
-                  }
-                },
-                itemBuilder: (context) => [
-                  PopupMenuItem<String>(
-                    value: 'remove',
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.delete_outline,
-                          size: 18,
-                          color: Colors.red[600],
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          'Remove',
-                          style: TextStyle(
-                            color: Colors.red[600],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
+            : GestureDetector(
+                onTap: isCurrent
+                    ? null
+                    : () async {
+                        await ClearProviders.clearAllProviders(context);
+                        await _switchAccount(context, account, sessionService);
+                      },
+                child: Container(
+                  padding: EdgeInsets.all(10),
+                  child: Text(
+                    "Switch",
+                    style: TextStyle(
+                      color: AllDesigns.appColor,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 13,
                     ),
                   ),
-                ],
+                ),
               ),
-        onTap: isCurrent
-            ? null
-            : () async {
-                await ClearProviders.clearAllProviders(context);
-                await _switchAccount(context, account, sessionService);
-              },
       ),
     );
   }
@@ -536,8 +514,7 @@ class SwitchAccountWidget extends StatelessWidget {
             return _buildDefaultAvatarIcon(isDark);
           },
         );
-      } catch (e) {
-      }
+      } catch (e) {}
     }
 
     if (serverUrl == null || userId == null) {
@@ -653,17 +630,17 @@ class SwitchAccountWidget extends StatelessWidget {
 
       final client = await OdooSessionManager.getClientEnsured();
 
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        context.read<CompanyProvider>().initialize();
+        context.read<ProfileProvider>().fetchUserProfile();
+      });
+
       final userCompanies = await OdooSessionManager.getAllowedCompaniesList();
-
-      final allowed = userCompanies.map((e) => e['id'] as int).toList();
-
-      final selectedCompany = allowed.isNotEmpty
-          ? allowed.first
-          : newSession.companyId;
+      final selectedCompany = newSession.companyId;
 
       final fixedSession = newSession.copyWith(
         selectedCompanyId: selectedCompany,
-        allowedCompanyIds: allowed,
+        allowedCompanyIds: newSession.allowedCompanyIds,
       );
 
       await fixedSession.saveToPrefs();
@@ -683,8 +660,6 @@ class SwitchAccountWidget extends StatelessWidget {
       );
 
       biometricContext.endAccountOperation('account_switch');
-
-
     } catch (e) {
       biometricContext.endAccountOperation('account_switch');
       final baseurl = account['serverUrl'];

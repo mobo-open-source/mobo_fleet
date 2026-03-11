@@ -5,7 +5,6 @@ import 'package:mobo_projects/models/model_fleet_vehicle_tags.dart';
 import 'package:mobo_projects/models/model_vehicles_list.dart';
 import 'package:mobo_projects/core/services/odoo_session_manager.dart';
 
-
 /// Fetch Fleet Manager - Users
 class FetchFleetManager {
   static Future<ModelFetchFleetManager> fetchUsers() async {
@@ -29,7 +28,7 @@ class FetchFleetManager {
     return ModelFetchFleetManager.fromJson(response);
   }
 
-   static Future<ModelFetchVehicleCategory> fetchVehicleCategories() async {
+  static Future<ModelFetchVehicleCategory> fetchVehicleCategories() async {
     final odooClient = await OdooSessionManager.callKwWithCompany;
 
     final List<dynamic> response = await odooClient({
@@ -47,7 +46,7 @@ class FetchFleetManager {
     });
   }
 
-   static Future<List<List<dynamic>>> fetchFuelTypesRaw() async {
+  static Future<List<List<dynamic>>> fetchFuelTypesRaw() async {
     final odooClient = await OdooSessionManager.callKwWithCompany;
 
     final response = await odooClient({
@@ -76,7 +75,8 @@ class FetchFleetManager {
 
     return List<List<dynamic>>.from(response['transmission']['selection']);
   }
-    static Future<ModelFleetVehicleTags> fetchTags() async {
+
+  static Future<ModelFleetVehicleTags> fetchTags() async {
     final odooClient = await OdooSessionManager.callKwWithCompany;
 
     final List<dynamic> response = await odooClient({
@@ -91,7 +91,7 @@ class FetchFleetManager {
     return ModelFleetVehicleTags.fromJson(response);
   }
 
-    static Future<ModelVehicleList> fetchVehicles({
+  static Future<ModelVehicleList> fetchVehicles({
     String? query,
     int limit = 20,
   }) async {
@@ -140,8 +140,7 @@ class FetchFleetManager {
     return ModelVehicleList.fromJson(response);
   }
 
-
-   static Future<List<ModelDrivingHistoryVehicles>> fetchDrivingHistory({
+  static Future<List<ModelDrivingHistoryVehicles>> fetchDrivingHistory({
     int? vehicleId,
   }) async {
     final odooClient = await OdooSessionManager.callKwWithCompany;
@@ -170,8 +169,9 @@ class FetchFleetManager {
 
     return response
         .map(
-          (e) =>
-              ModelDrivingHistoryVehicles.fromJson(Map<String, dynamic>.from(e)),
+          (e) => ModelDrivingHistoryVehicles.fromJson(
+            Map<String, dynamic>.from(e),
+          ),
         )
         .toList();
   }
@@ -238,10 +238,10 @@ class BikeFrameTypeItem {
 
     return response
         .map(
-          (e) =>
-              ModelDrivingHistoryVehicles.fromJson(Map<String, dynamic>.from(e)),
+          (e) => ModelDrivingHistoryVehicles.fromJson(
+            Map<String, dynamic>.from(e),
+          ),
         )
         .toList();
   }
 }
-

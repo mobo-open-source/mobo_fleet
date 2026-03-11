@@ -9,6 +9,7 @@ import 'package:mobo_projects/core/services/odoo_session_manager.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import '../../core/theme/app_theme.dart';
+import '../../shared/services/review_service.dart';
 import 'dashboard_provider.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -42,6 +43,7 @@ class _DashboardPageState extends State<DashboardPage> {
         dashboardProvider.setGreetings();
         dashboardProvider.safeNotify();
       }
+      await ReviewService().checkAndShowRating(context);
     });
   }
 
@@ -207,11 +209,13 @@ class _DashboardPageState extends State<DashboardPage> {
                         ),
                       ),
                       const SizedBox(height: 20),
+
                       buildText(
                         text: "Cost Overview",
                         fontWeight: FontWeight.w900,
                         fontSize: 20,
                       ),
+
                       const SizedBox(height: 10),
                       StaggeredGrid.count(
                         crossAxisCount: 2,

@@ -17,7 +17,7 @@ class ClearProviders {
     context.read<AddServiceFuelLogProvider>().clearOnLogout();
     context.read<AddContractsLogProvider>().clearOnLogout();
     context.read<ActivityPageProvider>().clearOnLogout();
-    context.read<BottomNavProvider>().clearOnLogout();
+    context.read<BottomNavigationBarProvider>().clearOnLogout();
     context.read<VehiclesProvider>().clearOnLogout();
     context.read<DashboardProvider>().clearOnLogout();
     context.read<DriversPageProvider>().clearOnLogout();

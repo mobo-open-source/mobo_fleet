@@ -8,6 +8,7 @@ import 'package:mobo_projects/core/designs/custom_designs.dart';
 import 'package:mobo_projects/features/admin_permissioncheck/fleet_permission_provider.dart';
 import 'package:mobo_projects/features/admin_permissioncheck/fleet_permission_view.dart';
 import 'package:mobo_projects/features/settings/providers/settings_provider.dart';
+import 'package:mobo_projects/shared/services/review_service.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
@@ -65,6 +66,7 @@ class _ActivityPageState extends State<ActivityPage> {
       provider.fetchUserDetails();
       provider.onRefresh();
       provider.markInitialized();
+      await ReviewService().printReviewStats();
     });
   }
 

@@ -20,7 +20,7 @@ void main() {
     await tester.pumpWidget(
       MultiProvider(
         providers: [
-          ChangeNotifierProvider(create: (_) => BottomNavProvider()),
+          ChangeNotifierProvider(create: (_) => BottomNavigationBarProvider()),
           ChangeNotifierProvider(create: (_) => DashboardProvider()),
           ChangeNotifierProvider(create: (_) => VehiclesProvider()),
           ChangeNotifierProvider(create: (_) => DriversPageProvider()),

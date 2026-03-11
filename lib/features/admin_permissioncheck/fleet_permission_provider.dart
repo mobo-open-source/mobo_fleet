@@ -27,8 +27,6 @@ class FleetPermissionProvider extends ChangeNotifier {
     try {
       final client = await OdooSessionManager.getClient();
       final session = client?.sessionId;
-      log(" current sessions : ${client!.sessionId.toString()}");
-
       final userId = session?.userId;
 
       if (session?.userId == null) {
@@ -74,12 +72,8 @@ class FleetPermissionProvider extends ChangeNotifier {
       }
       isFleetAdmin = hasFleetAdmin;
       canAccessFleet = hasFleetAdmin || hasFleetUser;
-      log('Odoo major version: $majorVersion');
-      log(
-        'Fleet permission → Admin: $hasFleetAdmin | User: $hasFleetUser | Access: $canAccessFleet',
-      );
+
     } catch (e) {
-      log('Fleet permission error: $e');
       canAccessFleet = false;
       isFleetAdmin = false;
     } finally {
@@ -130,7 +124,6 @@ class FleetPermissionProvider extends ChangeNotifier {
     isCheckingg = false;
     canAccessFleet = false;
     isLoading = false;
-    log("state reset successful");
     notifyListeners();
   }
 }

@@ -8,6 +8,7 @@ import 'package:mobo_projects/models/model_add_log_drivers_list.dart';
 import 'package:mobo_projects/core/designs/custom_designs.dart';
 import 'package:mobo_projects/features/activity/activity_page_provider.dart';
 import 'package:mobo_projects/features/add_service_fuel/add_service_fuel_log_provider.dart';
+import 'package:mobo_projects/shared/services/review_service.dart';
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -287,6 +288,8 @@ class _AddServiceFuelLogPageState extends State<AddServiceFuelLogPage> {
                             context,
                             "Successfully added into the Service",
                           );
+                          await ReviewService().trackSignificantEvent();
+                          ReviewService().checkAndShowRating(context);
                         },
 
                   child: Container(

@@ -2,7 +2,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:mobo_projects/features/bottom_navigation_bar/bottom_navigation_bar_page.dart';
+import 'package:mobo_projects/features/company/providers/company_provider.dart';
 import 'package:mobo_projects/features/module_check/module_check_dialog.dart';
+import 'package:mobo_projects/features/profile/providers/profile_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'shared/widgets/loaders/loading_indicator.dart';
 import 'features/login/pages/server_setup_screen.dart';
@@ -61,7 +64,6 @@ class _AppEntryState extends State<AppEntry> {
             'call',
             {},
           );
-
           /// company_id is usually in: sessionInfo['user_companies']['current_company']
           final currentCompany = sessionInfo;
         } catch (e) {
@@ -104,9 +106,26 @@ class _AppEntryState extends State<AppEntry> {
           });
 
           inventoryInstalled = (count as num) > 0;
+          if (inventoryInstalled) {
+
+            try {
+              final sessionService = SessionService.instance;
+              final currentSession =
+                  await OdooSessionManager.getCurrentSession();
+
+              if (currentSession != null) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  context.read<CompanyProvider>().initialize();
+                  context.read<ProfileProvider>().fetchUserProfile();
+                });
+                await sessionService.storeAccount(currentSession, currentSession.password,markAsCurrent: true);
+              }
+            } catch (e) {
+            }
+          }
         }
       } catch (e) {
-        inventoryInstalled = true;
+        inventoryInstalled = false;
 
         /// Keep as false; the MissingInventoryScreen will allow retry
       }
@@ -121,9 +140,11 @@ class _AppEntryState extends State<AppEntry> {
 
   @override
   Widget build(BuildContext context) {
+
     return FutureBuilder<Map<String, dynamic>>(
       future: _initFuture,
       builder: (context, snapshot) {
+
         if (snapshot.connectionState != ConnectionState.done) {
           return const Scaffold(body: Center(child: LoadingIndicator()));
         }
@@ -170,8 +191,10 @@ class _AppEntryState extends State<AppEntry> {
               );
             });
 
+            return ServerSetupScreen();
+
             /// 👇 Login screen stays in the background
-            return const BottomNavigationBarPage();
+            // return const BottomNavigationBarPage();
           }
 
           /// No biometric, go directly to app
