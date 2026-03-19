@@ -7,7 +7,7 @@ import 'package:mobo_projects/features/vehicles/vehicles_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:mobo_projects/features/admin_permissioncheck/fleet_permission_provider.dart';
 
-class BottomNavProvider extends ChangeNotifier {
+class BottomNavigationBarProvider extends ChangeNotifier {
   int index = 0;
 
   screenIndex(int clickedIndex) {

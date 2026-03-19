@@ -1199,9 +1199,13 @@ class VehiclesDetailsProvider extends ChangeNotifier {
     } catch (e) {
       return false;
     } finally {
-      isVehiclesDetailsUpdating = false;
-      notifyListeners();
+
     }
+  }
+
+  void clearLoading(){
+    isVehiclesDetailsUpdating = false;
+    notifyListeners();
   }
 
   String displayValue(String? value) {

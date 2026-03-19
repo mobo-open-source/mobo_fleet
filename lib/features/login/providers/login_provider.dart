@@ -3,13 +3,22 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:flutter/material.dart';
-import 'package:mobo_projects/features/two_factor_authentication/enum_login_result.dart';
 import 'package:mobo_projects/core/models/appsession.dart';
 import 'package:odoo_rpc/odoo_rpc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 import '../../../core/services/odoo_session_manager.dart';
 import '../../../core/services/session_service.dart';
+
+// ///enum function to check the loginResult
+enum LoginResult {
+  success,
+  twoFactorRequired,
+  invalidCredentials,
+  networkError,
+}
+
+enum LoginStatus { success, twoFactorEnabled, failed }
 
 class LoginProvider with ChangeNotifier {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -252,8 +261,6 @@ class LoginProvider with ChangeNotifier {
         _serverDatabaseMap[lastServer] = lastDb;
       }
 
-
-
       _isInitialized = true;
       _safeNotifyListeners();
     } catch (e) {
@@ -366,8 +373,7 @@ class LoginProvider with ChangeNotifier {
           await prefs.setString('server_db_map', jsonEncode(map));
         } catch (_) {}
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   String _normalizeUrl(String url) {
@@ -408,7 +414,6 @@ class LoginProvider with ChangeNotifier {
     final domain = extractDomain(fullUrl);
     _selectedProtocol = protocol;
     urlController.text = domain;
-
   }
 
   void clearForm() {
@@ -588,8 +593,7 @@ class LoginProvider with ChangeNotifier {
       }
       _resetDatabaseState();
     } catch (e) {
-      errorMessage =
-          'Unable to connect to server. Please verify the server URL is correct.';
+      errorMessage = "The listing database is currently disabled";
       _resetDatabaseState();
     } finally {
       isLoadingDatabases = false;
@@ -666,11 +670,9 @@ class LoginProvider with ChangeNotifier {
 
         /// Store account in SessionService for account switching
         try {
-          final sessionService = SessionService.instance;
           final currentSession = await OdooSessionManager.getCurrentSession();
 
           if (currentSession != null) {
-            await sessionService.storeAccount(currentSession, password);
           }
         } catch (e) {}
 

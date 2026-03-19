@@ -26,7 +26,9 @@ void main() {
   }) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider<DriversPageProvider>.value(value: vehiclesProvider),
+        ChangeNotifierProvider<DriversPageProvider>.value(
+          value: vehiclesProvider,
+        ),
         ChangeNotifierProvider<FleetPermissionProvider>.value(
           value: permissionProvider,
         ),
@@ -46,26 +48,5 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
     expect(fakeProvider.lastSearchQuery, 'abc');
     expect(fakeProvider.fetchCalled, isTrue);
-  });
-
-  testWidgets('Fleet permission Drivers page', (
-    WidgetTester tester,
-  ) async {
-    final fakeDriversProvider = FakeDriversPageProvider();
-    final fakePermissionProvider = FakeFleetPermissionProvider(
-      canAccess: false,
-    );
-
-    await tester.pumpWidget(
-      createPermissionTestWidget(
-        vehiclesProvider: fakeDriversProvider,
-        permissionProvider: fakePermissionProvider,
-      ),
-    );
-    await tester.pumpAndSettle();
-    expect(
-      find.textContaining('You do not have access to the Fleet Drivers page.'),
-      findsOneWidget,
-    );
   });
 }

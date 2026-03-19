@@ -141,7 +141,7 @@ class _VehiclesDetailsPageState extends State<VehiclesDetailsPage> {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (_) => Driverdetails(
+                          builder: (_) => DriversDetailsPage(
                             showFromDrivers: true,
                             vehicleId: widget.vehicleId,
                           ),

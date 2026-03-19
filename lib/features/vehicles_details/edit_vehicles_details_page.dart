@@ -13,6 +13,7 @@ import 'package:mobo_projects/models/model_fetch_vehicle_category.dart';
 import 'package:mobo_projects/features/dashboard/dashboard_provider.dart';
 import 'package:mobo_projects/features/vehicles/vehicles_provider.dart';
 import 'package:mobo_projects/features/vehicles_details/vehicles_details_provider.dart';
+import 'package:mobo_projects/shared/services/review_service.dart';
 import 'package:provider/provider.dart';
 import 'package:mobo_projects/features/add_contracts/fetched_fleet_drivers.dart'
     as Driverfetch;
@@ -386,13 +387,15 @@ class _EditVehiclesDetailsPageState extends State<EditVehiclesDetailsPage> {
                             await dashboardProvider.refreshDashboard(context);
 
                             Navigator.of(context).pop();
-
+                            await ReviewService().trackSignificantEvent();
+                            await ReviewService().checkAndShowRating(context);
                             CustomSnackbar.showSuccess(
                               context,
                               isEditMode
                                   ? "Vehicle updated successfully"
                                   : "Vehicle added successfully",
                             );
+                            provider.clearLoading();
                           } else {
                             CustomSnackbar.showError(
                               context,
@@ -484,7 +487,9 @@ class _EditVehiclesDetailsPageState extends State<EditVehiclesDetailsPage> {
   }) {
     return Container(
       decoration: BoxDecoration(
-        color: isDarkTheme ? AllDesigns.greyShade800Color : AllDesigns.whiteColor,
+        color: isDarkTheme
+            ? AllDesigns.greyShade800Color
+            : AllDesigns.whiteColor,
 
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
@@ -505,7 +510,9 @@ class _EditVehiclesDetailsPageState extends State<EditVehiclesDetailsPage> {
               title,
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: isDarkTheme ? AllDesigns.whiteColor : AllDesigns.blackColor,
+              color: isDarkTheme
+                  ? AllDesigns.whiteColor
+                  : AllDesigns.blackColor,
             ),
           ),
 
@@ -712,7 +719,7 @@ class _EditVehiclesDetailsPageState extends State<EditVehiclesDetailsPage> {
                         vertical: 5,
                       ),
                       decoration: BoxDecoration(
-                        color: AllDesigns.greyShade800Color,
+                        color: AllDesigns.greyShade300Color,
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Row(

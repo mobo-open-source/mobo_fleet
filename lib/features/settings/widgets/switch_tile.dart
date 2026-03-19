@@ -23,7 +23,10 @@ class SwitchTile extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return ListTile(
-      leading: HugeIcon(icon: icon, color: isDark ? Colors.grey[400] : Colors.grey[600]),
+      leading: HugeIcon(
+        icon: icon,
+        color: isDark ? Colors.grey[400] : Colors.grey[600],
+      ),
       title: Text(
         title,
         style: TextStyle(
@@ -38,10 +41,7 @@ class SwitchTile extends StatelessWidget {
           color: isDark ? Colors.grey[400] : Colors.grey[600],
         ),
       ),
-      trailing: MoboToggle(
-        value: value,
-        onChanged: onChanged,
-      ),
+      trailing: MoboToggle(value: value, onChanged: onChanged),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     );
   }

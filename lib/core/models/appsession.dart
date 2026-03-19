@@ -156,6 +156,7 @@ class AppSessionData {
         id: sessionId!,
         userId: userId!,
         partnerId: 0,
+
         /// Will be updated on next auth
         companyId: companyId ?? 0,
         allowedCompanies: [],
@@ -178,8 +179,6 @@ class AppSessionData {
         allowedCompanyIds: allowed,
         isStockUser: isStockUser,
       );
-    } catch (e) {
-      log("error in the getting session from pref ==><${e.toString()}");
-    }
+    } catch (e) {}
   }
 }

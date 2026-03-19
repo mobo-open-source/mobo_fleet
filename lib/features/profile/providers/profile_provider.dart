@@ -242,8 +242,7 @@ class ProfileProvider extends ChangeNotifier {
         _isLoading = false;
         notifyListeners();
       }
-    } catch (e) {
-    }
+    } catch (e) {}
   }
 
   Future<void> fetchUserProfile({bool forceRefresh = false}) async {

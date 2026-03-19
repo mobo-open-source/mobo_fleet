@@ -37,7 +37,26 @@ class ProfileHeaderCard extends StatelessWidget {
         ? CircleAvatar(
             radius: 34,
             backgroundImage: MemoryImage(avatar!),
-
+            child: ClipOval(
+              child: Image.memory(
+                avatar!,
+                width: 68,
+                height: 68,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) {
+                  return Container(
+                    width: 68,
+                    height: 68,
+                    color: isDark ? Colors.grey[700] : Colors.grey[300],
+                    child: HugeIcon(
+                      icon: HugeIcons.strokeRoundedUserCircle,
+                      color: isDark ? Colors.white70 : Colors.black54,
+                      size: 18,
+                    ),
+                  );
+                },
+              ),
+            ),
           )
         : CircleAvatar(
             radius: 34,

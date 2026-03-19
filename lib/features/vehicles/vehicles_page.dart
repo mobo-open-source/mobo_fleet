@@ -8,6 +8,7 @@ import 'package:mobo_projects/features/admin_permissioncheck/fleet_permission_pr
 import 'package:mobo_projects/features/admin_permissioncheck/fleet_permission_view.dart';
 import 'package:mobo_projects/features/vehicles_details/edit_vehicles_details_page.dart';
 import 'package:mobo_projects/features/vehicles_details/vehicles_details_page.dart';
+import 'package:mobo_projects/shared/services/review_service.dart';
 import 'package:provider/provider.dart';
 import 'vehicles_provider.dart';
 import 'package:shimmer/shimmer.dart';
@@ -32,6 +33,7 @@ class _VehiclesPageState extends State<VehiclesPage> {
       }
       final provider = Provider.of<VehiclesProvider>(context, listen: false);
       provider.fetchVehiclesPageData();
+      await ReviewService().printReviewStats();
     });
   }
 

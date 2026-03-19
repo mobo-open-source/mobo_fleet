@@ -1,7 +1,6 @@
 import 'package:mobo_projects/models/model_service_type_list.dart';
 import 'package:mobo_projects/core/services/odoo_session_manager.dart';
 
-
 /// Fetch Fleet Service Types
 class FetchFleetServicesTypes {
   static Future<ModelServiceTypeList> fetchServiceTypes({
